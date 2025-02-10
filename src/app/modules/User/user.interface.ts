@@ -14,6 +14,8 @@ export interface TUser {
     is_banned: boolean;
     profile_pic: string;
     bio: string;
+    updatedAt:Date;
+    createdAt: Date;
 }
 
 export interface UserModel extends Model<TUser> {

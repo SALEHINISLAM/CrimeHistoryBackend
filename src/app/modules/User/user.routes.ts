@@ -10,5 +10,9 @@ const router=express.Router()
 router.post('/register',validateRequest(UserValidation.createUserValidationSchema),UserControllers.createUser)
 router.post("/login",UserControllers.loginUser)
 router.post("/verify-user",auth(USER_ROLE.Admin,USER_ROLE.UnVerifiedUser,USER_ROLE.VerifiedUser),UserControllers.sendVerificationToken)
+router.post("/verify-code",auth(USER_ROLE.Admin,USER_ROLE.VerifiedUser,USER_ROLE.UnVerifiedUser),UserControllers.verifyCode)
+router.post("/forget-password",auth(USER_ROLE.Admin,USER_ROLE.VerifiedUser,USER_ROLE.UnVerifiedUser),UserControllers.sendForgetPasswordToken)
+router.post("/reset-password",auth(USER_ROLE.Admin,USER_ROLE.VerifiedUser,USER_ROLE.UnVerifiedUser),UserControllers.resetPassword)
+
 
 export const UserRoutes=router

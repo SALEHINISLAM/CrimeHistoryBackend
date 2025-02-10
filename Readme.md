@@ -64,7 +64,7 @@ Problem Statement: https://docs.google.com/document/d/1zsjvdeCcg1HkxweWm1hH5nFqX
 }
 ```
 
-3. Send Verify Token
+3. Send Verification Code
 ```bash
 /api/v1/users/verify-user
 ```
@@ -81,6 +81,77 @@ Authorization= Secret Access Token that you received in the times of login
     "data": {
         "success": true,
         "message": "Verification token sent and saved successfully"
+    }
+}
+```
+
+ * Code is 4 digit.
+
+ 4. Time for verification of the code
+ ```bash
+ /api/v1/users/verify-code
+ ```
+ ***Simple Input***
+ ```json
+ {
+    "code":7047
+}
+```
+***Simple Output***
+```json
+{
+    "success": true,
+    "message": "You have successfully verified your account!",
+    "statusCode": 200,
+    "data": {
+        "acknowledged": true,
+        "modifiedCount": 1,
+        "upsertedId": null,
+        "upsertedCount": 0,
+        "matchedCount": 1
+    }
+}
+```
+5. Forget Password Button
+```bash
+/api/v1/users/forget-password
+```
+just add authorization header
+***Simple Output***
+```json
+{
+    "success": true,
+    "message": "Forget Password Token sent. Please check your email and verify it's you.",
+    "statusCode": 200,
+    "data": {
+        "success": true,
+        "message": "Verification token sent and saved successfully"
+    }
+}
+```
+compare the code with verify code
+5. Reset The Password
+```bash
+/api/v1/users/reset-password
+```
+***Simple Input***
+```json
+{
+    "password":"Secret@1"
+}
+```
+***Simple Output***
+```json
+{
+    "success": true,
+    "message": "You have successfully changed your password!",
+    "statusCode": 200,
+    "data": {
+        "acknowledged": true,
+        "modifiedCount": 1,
+        "upsertedId": null,
+        "upsertedCount": 0,
+        "matchedCount": 1
     }
 }
 ```
