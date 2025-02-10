@@ -2,6 +2,7 @@ import mongoose, { model, Schema } from "mongoose";
 import { TUser, UserModel } from "./user.interface";
 import bcrypt from "bcrypt";
 import config from "../../config";
+import { number } from "zod";
 
 const userSchema = new Schema<TUser, UserModel>(
     {
@@ -23,6 +24,9 @@ const userSchema = new Schema<TUser, UserModel>(
         needs_password_change: {
             type: Boolean,
             default: false
+        },
+        verification_token:{
+            type:Number
         },
         passwordChangedAt:{
             type: Date,

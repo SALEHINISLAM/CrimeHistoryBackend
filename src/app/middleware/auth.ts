@@ -10,6 +10,7 @@ import { User } from "../modules/User/user.model";
 const auth = (...requiredRoles: TUserRole[]) => {
     return catchAsync(async (req: Request, res: Response, next: NextFunction) => {
         const token = req.headers.authorization;
+        //console.log(token)
         //check if token is missing
         if (!token) {
             throw new AppError(httpStatus.UNAUTHORIZED, "You are not authorized!");
@@ -24,9 +25,10 @@ const auth = (...requiredRoles: TUserRole[]) => {
         } catch (error) {
             throw new AppError(httpStatus.UNAUTHORIZED, "UnAuthorizedError")
         }
-        const { role, userId, iat } = decoded;
+        const { role, email, iat } = decoded;
+        console.log(decoded)
         //checking if the user is exists
-        const user = await User.isUserExistsByCustomId(userId)
+        const user = await User.findOne({email:email})
         if (!user) {
             throw new AppError(httpStatus.NOT_FOUND, "This user does not exist")
         }
@@ -35,11 +37,7 @@ const auth = (...requiredRoles: TUserRole[]) => {
         if (isBanned) {
             throw new AppError(httpStatus.FORBIDDEN, "This user is banned by our admin")
         }
-        //checking if the user is verified
-        const isVerified = user.is_verified
-        if (!isVerified) {
-            throw new AppError(httpStatus.FORBIDDEN, "This user is not verified by our admin")
-        }
+        
         //check if the user has required roles
         if (
             user.passwordChangedAt &&

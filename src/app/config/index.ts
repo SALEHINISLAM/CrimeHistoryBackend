@@ -9,5 +9,8 @@ export default {
     db_url:process.env.DB_Url,
     mode:process.env.Node_Env,
     default_pass:process.env.Default_Pass,
-    jwt_access_token: process.env.Jwt_Access_Token
+    jwt_access_token: process.env.Jwt_Access_Token,
+    emailAddress: process.env.NMEmail,
+    emailPassword:process.env.NMPass,
+    emailHostName: process.env.NMServiceName
 }

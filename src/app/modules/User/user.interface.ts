@@ -7,6 +7,7 @@ export interface TUser {
     role: "SuperAdmin" | "Admin" | "VerifiedUser" | "UnVerifiedUser";
     password: string;
     needs_password_change:boolean;
+    verification_token:number;
     passwordChangedAt?: Date;
     phone_number: string;
     is_verified: boolean;

@@ -36,14 +36,6 @@ const createUserValidationSchema = z.object({
             required_error: "is_banned is required",
             invalid_type_error: "is_banned must be a boolean",
         }).default(false),
-        profile_pic: z.string({
-            required_error: "Profile picture is required",
-            invalid_type_error: "Profile picture must be a string",
-        }).url("Invalid URL format").optional(),
-        bio: z.string({
-            required_error: "Bio is required",
-            invalid_type_error: "Bio must be a string",
-        }).max(500, "Bio must be less than 500 characters").optional(),
     })
 });
 

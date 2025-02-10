@@ -63,3 +63,24 @@ Problem Statement: https://docs.google.com/document/d/1zsjvdeCcg1HkxweWm1hH5nFqX
     }
 }
 ```
+
+3. Send Verify Token
+```bash
+/api/v1/users/verify-user
+```
+Add Authorization to the headers
+```json
+Authorization= Secret Access Token that you received in the times of login
+```
+***Simple Output***
+```json
+{
+    "success": true,
+    "message": "Verification token sent . Please check your email and verify your account.",
+    "statusCode": 200,
+    "data": {
+        "success": true,
+        "message": "Verification token sent and saved successfully"
+    }
+}
+```
