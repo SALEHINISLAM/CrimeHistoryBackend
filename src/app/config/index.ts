@@ -10,7 +10,10 @@ export default {
     mode:process.env.Node_Env,
     default_pass:process.env.Default_Pass,
     jwt_access_token: process.env.Jwt_Access_Token,
+    jwt_refresh_token: process.env.Jwt_Refresh_Token,
+    jwt_access_expires_in: process.env.Jwt_Access_Expires_In,
+    jwt_refresh_expires_in: process.env.Jwt_Refresh_Expires_In,
     emailAddress: process.env.NMEmail,
     emailPassword:process.env.NMPass,
-    emailHostName: process.env.NMServiceName
+    emailHostName: process.env.NMServiceName,
 }

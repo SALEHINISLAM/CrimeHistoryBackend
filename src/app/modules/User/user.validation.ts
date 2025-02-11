@@ -39,4 +39,17 @@ const createUserValidationSchema = z.object({
     })
 });
 
-export const UserValidation = { createUserValidationSchema }
+const verifyCodeValidationSchema = z.object({
+    body: z.object({
+        code: z.number({ required_error: "Verification code is required." })
+    })
+})
+
+const resetPasswordValidationSchema = z.object({
+    body: z.object({
+        password: z.string({ required_error: "Password is required." }),
+        code: z.number({ required_error: "Verification code is required." })
+    })
+})
+
+export const UserValidation = { createUserValidationSchema, verifyCodeValidationSchema, resetPasswordValidationSchema }

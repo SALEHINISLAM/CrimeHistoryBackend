@@ -39,10 +39,6 @@ const userSchema = new Schema<TUser, UserModel>(
             type: String,
             enum: ["SuperAdmin", "Admin", "VerifiedUser", "UnVerifiedUser"],
         },
-        is_verified: {
-            type: Boolean,
-            default: false
-        },
         is_banned: {
             type: Boolean,
             default: false

@@ -1,12 +1,27 @@
 import { Router } from "express";
 import { UserRoutes } from "../modules/User/user.routes";
+import { AuthRoutes } from "../modules/Auth/auth.routes";
+import { VerifiedUserRoutes } from "../modules/VerifiedUser/vUser.route";
 
 const router=Router()
 
-const moduleRoutes=[
+type TModuleRoutes={
+    path:string,
+    route:Router,
+}
+
+const moduleRoutes:TModuleRoutes[]=[
     {
         path:"/users",
         route:UserRoutes
+    },
+    {
+        path:"/auth",
+        route:AuthRoutes
+    },
+    {
+        path:"/verified-users",
+        route:VerifiedUserRoutes
     }
 ]
 

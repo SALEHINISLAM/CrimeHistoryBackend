@@ -10,7 +10,6 @@ export interface TUser {
     verification_token:number;
     passwordChangedAt?: Date;
     phone_number: string;
-    is_verified: boolean;
     is_banned: boolean;
     profile_pic: string;
     bio: string;
