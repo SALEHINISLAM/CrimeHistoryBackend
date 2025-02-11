@@ -33,4 +33,76 @@ const updateCrimePost=catchAsync(async(req,res)=>{
     })
 })
 
-export const CrimeController={createCrimePost,updateCrimePost}
+const createComment = catchAsync(async (req, res) => {
+    const { report_id } = req.query; // Get report_id from URL params
+    const { comment, proof_image_urls } = req.body; // Get comment data from request body
+    const user = req.user; // Get authenticated user from request
+
+    if (!report_id) {
+        throw new AppError(httpStatus.BAD_REQUEST, "Report ID is required.");
+    }
+
+    // Call the service function to create the comment
+    const result = await CrimeServices.createComment(user?.email, report_id as string, {
+        comment,
+        proof_image_urls,
+    });
+
+    // Send response
+    sendResponse(res, {
+        statusCode: httpStatus.OK,
+        success: true,
+        message: "Comment created successfully",
+        data: result,
+    });
+});
+
+const updateComment = catchAsync(async (req, res) => {
+    const { report_id, comment_id } = req.query; // Get report_id and comment_id from URL params
+    const { comment, proof_image_urls } = req.body; // Get updated comment data from request body
+    const user = req.user; // Get authenticated user from request
+
+    if (!report_id || !comment_id) {
+        throw new AppError(httpStatus.BAD_REQUEST, "Report ID and Comment ID are required.");
+    }
+    console.log('first')
+    // Call the service function to update the comment
+    const result = await CrimeServices.updateComment(user?.email, report_id as string, comment_id as string, {
+        comment,
+        proof_image_urls,
+    });
+
+    // Send response
+    sendResponse(res, {
+        statusCode: httpStatus.OK,
+        success: true,
+        message: "Comment updated successfully",
+        data: result,
+    });
+});
+
+const votePost = catchAsync(async (req, res) => {
+    const { report_id } = req.query; // Get report_id from URL params
+    const { vote_type } = req.body; // Get vote_type from request body
+    const user = req.user; // Get authenticated user from request
+
+    if (!report_id) {
+        throw new AppError(httpStatus.BAD_REQUEST, "Report ID is required.");
+    }
+    if (!vote_type) {
+        throw new AppError(httpStatus.BAD_REQUEST, "Vote type is required.");
+    }
+
+    // Call the service function to process the vote
+    const result = await CrimeServices.votePost(report_id as string, user?.user_id, vote_type);
+
+    // Send response
+    sendResponse(res, {
+        statusCode: httpStatus.OK,
+        success: true,
+        message: result.message,
+        data: result,
+    });
+});
+
+export const CrimeController={createCrimePost,updateCrimePost,createComment,updateComment,votePost}

@@ -448,3 +448,93 @@ Patch request
     }
 }
 ```
+
+15. Do Comments
+post request
+```bash
+/api/v1/crimes/create-comment?report_id=3a393b7b-9870-4078-962b-42006daa8be0
+```
+***Simple Input***
+```json
+{
+    "comment": "Send Police Imidiately.",
+    "proof_image_urls": [
+        "https://example.com/images/crime24.jpg"
+    ]
+}
+```
+***Simple Output***
+```json
+{
+    "success": true,
+    "message": "Comment created successfully",
+    "statusCode": 200,
+    "data": {
+        "newComment": {
+            "comment_id": "33cb0a42-ddd1-4d49-bdda-97bdff5954f5",
+            "user_id": "9a936322-4765-4203-88e3-4843cdd6c1b5",
+            "comment": "Send Police Imidiately.",
+            "proof_image_urls": [
+                "https://example.com/images/crime24.jpg"
+            ]
+        },
+        "message": "Your comment posted."
+    }
+}
+```
+Increase verification number by 2 while commenting
+
+16. Update Comment
+patch request
+```bash
+/api/v1/crimes/update-comment?comment_id=e267a240-d185-4e58-adc8-a21ca10c50e0&report_id=3a393b7b-9870-4078-962b-42006daa8be0
+```
+***Simple Input***
+```json
+{
+    "comment":"Please save us from the devil"
+}
+```
+***Simple Output***
+```json
+{
+    "success": true,
+    "message": "Comment updated successfully",
+    "statusCode": 200,
+    "data": {
+        "comment_id": "e267a240-d185-4e58-adc8-a21ca10c50e0",
+        "user_id": "9a936322-4765-4203-88e3-4843cdd6c1b5",
+        "comment": "Please save us from the devil",
+        "proof_image_urls": [
+            "https://example.com/proof1.jpg",
+            "https://example.com/proof2.jpg"
+        ],
+        "_id": "67aba40c21087eee8fccaf94",
+        "createdAt": "2025-02-11T19:25:00.877Z",
+        "updatedAt": "2025-02-11T19:52:18.162Z"
+    }
+}
+```
+
+17. Vote
+post request
+```bash
+/api/v1/crimes/vote-post?report_id=3a393b7b-9870-4078-962b-42006daa8be0
+```
+***Simple Input***
+```json
+{
+    "vote_type":"upVote"
+}
+```
+***Simple Output***
+```json
+{
+    "success": true,
+    "message": "upVote successful.",
+    "statusCode": 200,
+    "data": {
+        "message": "upVote successful."
+    }
+}
+```
