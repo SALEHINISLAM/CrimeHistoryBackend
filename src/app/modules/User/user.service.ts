@@ -89,6 +89,7 @@ const sendVerificationToken = async (payload: string) => {
         throw new AppError(httpStatus.INTERNAL_SERVER_ERROR, `Internal Server Error: ${error?.message}`);
     }
 };
+
 const sendForgetPasswordToken = async (payload: string) => {
     const session = await mongoose.startSession();
     session.startTransaction();

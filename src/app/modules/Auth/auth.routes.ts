@@ -11,4 +11,6 @@ router.post("/change-password",auth(USER_ROLE.Admin,USER_ROLE.UnVerifiedUser,USE
 
 router.post("/refresh-token",validateRequest(AuthValidationSchema.refreshTokenValidationSchema),AuthController.refreshToken)
 
+router.patch("/create-admin",auth(USER_ROLE.SuperAdmin),validateRequest(AuthValidationSchema.createAdminValidationSchema),AuthController.createAdminFromVerifiedUser)
+
 export const AuthRoutes=router

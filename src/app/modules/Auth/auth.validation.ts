@@ -24,4 +24,10 @@ const changePasswordValidationSchema = z.object({
     }),
 });
 
-export const AuthValidationSchema = { loginValidationSchema, refreshTokenValidationSchema ,changePasswordValidationSchema}
+const createAdminValidationSchema=z.object({
+    body:z.object({
+        email:z.string({required_error:"User email is required"})
+    })
+})
+
+export const AuthValidationSchema = { loginValidationSchema, refreshTokenValidationSchema ,changePasswordValidationSchema,createAdminValidationSchema}

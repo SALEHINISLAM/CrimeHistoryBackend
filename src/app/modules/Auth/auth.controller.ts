@@ -2,6 +2,7 @@ import httpStatus from 'http-status';
 import catchAsync from '../../utilis/CatchAsync';
 import { AuthServices } from './auth.services';
 import sendResponse from '../../utilis/sendResponse';
+import AppError from '../../errors/AppErrors';
 
 const changePassword = catchAsync(async (req, res) => {
     const { ...passwordData } = req.body;
@@ -20,7 +21,7 @@ const refreshToken = catchAsync(async (req, res) => {
 
     const result = await AuthServices.refreshToken(refreshToken);
     
-    console.log("auth controller",refreshToken)
+    //console.log("auth controller",refreshToken)
 
     sendResponse(res, {
         statusCode: httpStatus.OK,
@@ -30,4 +31,18 @@ const refreshToken = catchAsync(async (req, res) => {
     });
 });
 
-export const AuthController = { changePassword,refreshToken }
+const createAdminFromVerifiedUser = catchAsync(async(req,res)=>{
+    const {email}=req.body
+    if (!email) {
+        throw new AppError(httpStatus.NOT_FOUND,"User not found")
+    }
+    const result= await AuthServices.createAdminFromVerifiedUser(email)
+    sendResponse(res, {
+        statusCode: httpStatus.OK,
+        success: true,
+        message: 'The User role is updated',
+        data: result,
+    });
+})
+
+export const AuthController = { changePassword,refreshToken, createAdminFromVerifiedUser }
