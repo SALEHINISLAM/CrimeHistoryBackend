@@ -61,13 +61,13 @@ const globalErrorHandler: ErrorRequestHandler = (err, req, res, next)=> {
         ];
     }
     //ultimate return
-    res.status(statusCode).json({
+    return res.status(statusCode).json({
         success: false,
         message,
         errorSources,
         err,
         stack: config.mode === 'Development' ? err?.stack : null,
-    } as TErrorResponse);
+    });
 }
 
 export default globalErrorHandler;

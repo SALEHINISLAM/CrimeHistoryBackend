@@ -272,3 +272,48 @@ Super Admin access token must be in headers. because only he can made admin.
     "stack": "Error: You are not authorized!\n    at H:\\NSUHack\\BackEnd\\src\\app\\middleware\\auth.ts:16:19\n    at Generator.next (<anonymous>)\n    at H:\\NSUHack\\BackEnd\\src\\app\\middleware\\auth.ts:8:71\n    at new Promise (<anonymous>)\n    at __awaiter (H:\\NSUHack\\BackEnd\\src\\app\\middleware\\auth.ts:4:12)\n    at H:\\NSUHack\\BackEnd\\src\\app\\middleware\\auth.ts:11:81\n    at H:\\NSUHack\\BackEnd\\src\\app\\utilis\\CatchAsync.ts:6:25\n    at Layer.handle [as handle_request] (H:\\NSUHack\\BackEnd\\node_modules\\express\\lib\\router\\layer.js:95:5)\n    at next (H:\\NSUHack\\BackEnd\\node_modules\\express\\lib\\router\\route.js:149:13)\n    at Route.dispatch (H:\\NSUHack\\BackEnd\\node_modules\\express\\lib\\router\\route.js:119:3)"
 }
 ```
+
+9. Remove Admin
+patch request
+```bash
+/api/v1/auth/remove-admin
+```
+Super Admin access token must be in headers. because only he can made admin.
+***Simple Input***
+```json
+{
+    "email":"msionlinekingdom@gmail.com"
+}
+```
+***Simple Output***
+```json
+{
+    "success": true,
+    "message": "The User role is updated",
+    "statusCode": 200
+}
+```
+
+10. Ban User
+Patch request
+```bash
+/api/v1/auth/ban-user
+```
+Super Admin or Admin access token must be in headers. because only he can made admin.
+***Simple Input***
+```json
+{
+    "email":"msionlinekingdom@gmail.com"
+}
+```
+***Simple Output***
+```json
+{
+    "success": true,
+    "message": "The user is banned successfully",
+    "statusCode": 200,
+    "data": {
+        "message": "The user is banned"
+    }
+}
+```
