@@ -5,7 +5,6 @@ import AppError from "../../errors/AppErrors";
 import httpStatus from 'http-status'
 import { v4 as uuidv4 } from 'uuid';
 import { USER_ROLE } from "./user.constants";
-import sendResponse from "../../utilis/sendResponse";
 import { sendEmail } from "../../NodeMailerSetup/SendEmail";
 
 const createUserIntoDB = async (payload: TUser) => {

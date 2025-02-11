@@ -317,3 +317,31 @@ Super Admin or Admin access token must be in headers. because only he can made a
     }
 }
 ```
+
+11. Update Verified User Profile
+Patch request
+```bash
+/api/v1/verified-users/edit-profile
+```
+***Simple Input ***
+```json
+{
+    "bio":"MSI",
+    "profile_pic":"https://i.ibb.co.com/xH0JL92/proPhoto.jpg"
+}
+```
+***Simple Output***
+```json
+{
+    "success": true,
+    "message": "Profile is updated successfully!",
+    "statusCode": 200,
+    "data": {
+        "acknowledged": true,
+        "modifiedCount": 1,
+        "upsertedId": null,
+        "upsertedCount": 0,
+        "matchedCount": 1
+    }
+}
+```

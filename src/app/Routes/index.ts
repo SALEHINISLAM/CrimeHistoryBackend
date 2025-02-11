@@ -2,6 +2,7 @@ import { Router } from "express";
 import { UserRoutes } from "../modules/User/user.routes";
 import { AuthRoutes } from "../modules/Auth/auth.routes";
 import { VerifiedUserRoutes } from "../modules/VerifiedUser/vUser.route";
+import { CrimeRoutes } from "../modules/CrimeReport/crime.route";
 
 const router=Router()
 
@@ -22,6 +23,10 @@ const moduleRoutes:TModuleRoutes[]=[
     {
         path:"/verified-users",
         route:VerifiedUserRoutes
+    },
+    {
+        path:"/crimes",
+        route:CrimeRoutes
     }
 ]
 

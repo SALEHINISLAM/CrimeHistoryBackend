@@ -20,7 +20,7 @@ const createUser = catchAsync(async (req, res) => {
 })
 
 const loginUser = catchAsync(async (req, res) => {
-    const result = await AuthServices.loginUser(req.body)
+    const result = await AuthServices.loginUser(req.body,res)
     sendResponse(res, {
         statusCode: httpStatus.OK,
         success: true,
