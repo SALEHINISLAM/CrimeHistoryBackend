@@ -9,7 +9,7 @@ const crimeSchema = new Schema<TCrime>({
     description: { type: String, required: true },
     division: { type: String, required: true },
     district: { type: String, required: true },
-    crime_time: { type: Date, required: true },
+    crime_time: { type: Number, required: true },
     image_urls: { type: [String] },
     video_url: { type: String },
     verification_score: { type: Number, default:0 },

@@ -26,7 +26,7 @@ const auth = (...requiredRoles: TUserRole[]) => {
             throw new AppError(httpStatus.UNAUTHORIZED, "UnAuthorizedError")
         }
         const { role, email, iat } = decoded;
-        console.log(decoded)
+        //console.log(decoded)
         //checking if the user is exists
         const user = await User.findOne({email:email})
         if (!user) {

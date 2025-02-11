@@ -345,3 +345,83 @@ Patch request
     }
 }
 ```
+
+12. Create Crime Post
+Post request
+```bash
+/api/v1/crimes/create-crime-post
+```
+***Simple Input***
+```json
+{
+  "title": "Armed Robbery in Central Park",
+  "description": "An armed robbery occurred at Central Park around 10 PM. The suspect was described as wearing a black hoodie and a mask. No casualties were reported.",
+  "division": "Dhaka",
+  "district": "Manikganj",
+  "crime_time": 1730592000000,
+  "image_urls": [
+    "https://example.com/images/crime1.jpg",
+    "https://example.com/images/crime2.jpg"
+  ]
+}
+```
+***Simple Output***
+```json
+{
+    "success": true,
+    "message": "Crime Post created successfully",
+    "statusCode": 200,
+    "data": [
+        {
+            "report_id": "d6cdec4c-304b-4c40-b2cc-cdbc19d2b726",
+            "user_id": "9a936322-4765-4203-88e3-4843cdd6c1b5",
+            "title": "Armed Robbery in Central Park",
+            "description": "An armed robbery occurred at Central Park around 10 PM. The suspect was described as wearing a black hoodie and a mask. No casualties were reported.",
+            "division": "Dhaka",
+            "district": "Manikganj",
+            "crime_time": 1730592000000,
+            "image_urls": [
+                "https://example.com/images/crime1.jpg",
+                "https://example.com/images/crime2.jpg"
+            ],
+            "verification_score": 0,
+            "is_banned": false,
+            "_id": "67ab7578b8f878ea91648401",
+            "createdAt": "2025-02-11T16:06:16.341Z",
+            "updatedAt": "2025-02-11T16:06:16.341Z",
+            "__v": 0
+        }
+    ]
+}
+```
+
+13. Update Crime Post
+Patch request
+```bash
+http://localhost:5000/api/v1/crimes/update-crime-post?report_id=d6cdec4c-304b-4c40-b2cc-cdbc19d2b726
+```
+***Simple Input***
+```json
+{
+    "image_urls": [
+    "https://example.com/images/crime1.jpg",
+    "https://example.com/images/crime2.jpg",
+    "https://example.com/images/crime3.jpg"
+  ]
+}
+```
+***Simple Input***
+```json
+{
+    "success": true,
+    "message": "Crime Post updated successfully",
+    "statusCode": 200,
+    "data": {
+        "acknowledged": true,
+        "modifiedCount": 1,
+        "upsertedId": null,
+        "upsertedCount": 0,
+        "matchedCount": 1
+    }
+}
+```

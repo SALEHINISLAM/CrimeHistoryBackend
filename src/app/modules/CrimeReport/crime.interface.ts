@@ -7,7 +7,7 @@ export interface TCrime{
     description:string,
     division:string,
     district:string,
-    crime_time:Date,
+    crime_time:number,// save as milisecond
     createdAt:Date,
     updatedAt:Date,
     image_urls:string[],
