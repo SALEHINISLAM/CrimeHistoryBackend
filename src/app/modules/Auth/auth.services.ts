@@ -115,9 +115,21 @@ const createAdminFromVerifiedUser=async (email:string)=>{
     if (result.modifiedCount===0) {
         throw new AppError(httpStatus.NOT_MODIFIED,"Something went wrong")
     }
-    return result
+    return {message:"You have successfully updated role to admin!"}
+}
+
+const removeAdmin=async (email:string)=>{
+    const user =await User.findOne({email:email});
+    if (user?.role!=USER_ROLE.Admin) {
+        throw new AppError(httpStatus.NOT_MODIFIED,"The selected user is not an admin")
+    }
+    const result = await User.updateOne({email:email},{role:USER_ROLE.VerifiedUser},{upsert:false})
+    if (result.modifiedCount===0) {
+        throw new AppError(httpStatus.NOT_MODIFIED,"Something went wrong")
+    }
+    return 
 }
 
 export const AuthServices = {
-    loginUser,refreshToken,changePassword,createAdminFromVerifiedUser
+    loginUser,refreshToken,changePassword,createAdminFromVerifiedUser,removeAdmin
 }

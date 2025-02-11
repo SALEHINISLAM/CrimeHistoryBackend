@@ -44,5 +44,18 @@ const createAdminFromVerifiedUser = catchAsync(async(req,res)=>{
         data: result,
     });
 })
+const removeAdminFromVerifiedUser = catchAsync(async(req,res)=>{
+    const {email}=req.body
+    if (!email) {
+        throw new AppError(httpStatus.NOT_FOUND,"User not found")
+    }
+    const result= await AuthServices.createAdminFromVerifiedUser(email)
+    sendResponse(res, {
+        statusCode: httpStatus.OK,
+        success: true,
+        message: 'The User role is updated',
+        data: result,
+    });
+})
 
-export const AuthController = { changePassword,refreshToken, createAdminFromVerifiedUser }
+export const AuthController = { changePassword,refreshToken, createAdminFromVerifiedUser,removeAdminFromVerifiedUser }
