@@ -3,6 +3,7 @@ import { UserRoutes } from "../modules/User/user.routes";
 import { AuthRoutes } from "../modules/Auth/auth.routes";
 import { VerifiedUserRoutes } from "../modules/VerifiedUser/vUser.route";
 import { CrimeRoutes } from "../modules/CrimeReport/crime.route";
+import { AdminRoutes } from "../modules/Admin/admin.route";
 
 const router=Router()
 
@@ -27,6 +28,10 @@ const moduleRoutes:TModuleRoutes[]=[
     {
         path:"/crimes",
         route:CrimeRoutes
+    },
+    {
+        path:"/admin",
+        route:AdminRoutes
     }
 ]
 

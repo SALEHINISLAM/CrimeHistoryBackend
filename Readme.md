@@ -425,3 +425,26 @@ http://localhost:5000/api/v1/crimes/update-crime-post?report_id=d6cdec4c-304b-4c
     }
 }
 ```
+
+14. Ban a Crime Post
+Patch request
+```bash
+/api/v1/admin/ban_report\
+```
+***Simple Input***
+```json
+{
+    "report_id":"d6cdec4c-304b-4c40-b2cc-cdbc19d2b726"
+}
+```
+***Simple Output***
+```json
+{
+    "success": true,
+    "message": "Crime Post banned successfully",
+    "statusCode": 200,
+    "data": {
+        "message": "Post banned successfully."
+    }
+}
+```
