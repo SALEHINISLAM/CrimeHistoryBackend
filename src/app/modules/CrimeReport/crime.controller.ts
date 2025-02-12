@@ -109,9 +109,9 @@ const getCrimePost = catchAsync(async (req, res) => {
     // Extract pagination parameters from query (default: page=1, limit=10)
     const page = parseInt(req.query.page as string) || 1;
     const limit = parseInt(req.query.limit as string) || 10;
-
+    const searchQuery = req.query.search as string | undefined;
     // Fetch crime posts with pagination
-    const result = await CrimeServices.getCrimeReports(page, limit);
+    const result = await CrimeServices.getCrimeReports(page, limit,searchQuery);
 
     // Send response
     sendResponse(res, {

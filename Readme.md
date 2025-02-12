@@ -539,10 +539,10 @@ post request
 }
 ```
 
-17. Get Crime Post
+18. Get Crime Post and search
 post request
 ```bash
-/api/v1/crimes/get-post?page=1&limit=10
+/api/v1/crimes/get-post?page=1&limit=10&search=theft
 ```
 ***Simple Output***
 ```json
@@ -645,6 +645,85 @@ post request
         "totalReports": 2,
         "currentPage": 1,
         "totalPages": 1
+    }
+}
+```
+
+19. Get single post by id
+```bash
+/api/v1/crimes/get-single-post?report_id=3a393b7b-9870-4078-962b-42006daa8be0
+```
+***Simple Output***
+```json
+{
+    "success": true,
+    "message": "Crime report fetched successfully",
+    "statusCode": 200,
+    "data": {
+        "_id": "67aba26dbf3428a7c8b61f53",
+        "report_id": "3a393b7b-9870-4078-962b-42006daa8be0",
+        "user_id": "9a936322-4765-4203-88e3-4843cdd6c1b5",
+        "title": "Theft in Downtown",
+        "description": "A theft occurred near the central park. The suspect was seen fleeing the scene on a bicycle.",
+        "division": "Central",
+        "district": "Downtown",
+        "crime_time": 1698765432000,
+        "image_urls": [
+            "https://example.com/images/crime1.jpg",
+            "https://example.com/images/crime2.jpg",
+            "https://example.com/images/crime37.jpg"
+        ],
+        "verification_score": 3,
+        "is_banned": false,
+        "comments": [
+            {
+                "is_removed": false,
+                "comment_id": "e267a240-d185-4e58-adc8-a21ca10c50e0",
+                "user_id": "9a936322-4765-4203-88e3-4843cdd6c1b5",
+                "comment": "Please save us from the devil",
+                "proof_image_urls": [
+                    "https://example.com/proof1.jpg",
+                    "https://example.com/proof2.jpg"
+                ],
+                "_id": "67aba40c21087eee8fccaf94",
+                "createdAt": "2025-02-11T19:25:00.877Z",
+                "updatedAt": "2025-02-11T19:52:18.162Z"
+            },
+            {
+                "is_removed": false,
+                "comment_id": "34705838-39d5-41f4-a876-8b6a56768c2b",
+                "user_id": "9a936322-4765-4203-88e3-4843cdd6c1b5",
+                "comment": "I saw the suspect wearing a red jacket.",
+                "proof_image_urls": [
+                    "https://example.com/images/crime2.jpg"
+                ],
+                "_id": "67aba46021087eee8fccaf9a",
+                "createdAt": "2025-02-11T19:26:24.302Z",
+                "updatedAt": "2025-02-11T19:26:24.302Z"
+            },
+            {
+                "comment_id": "33cb0a42-ddd1-4d49-bdda-97bdff5954f5",
+                "user_id": "9a936322-4765-4203-88e3-4843cdd6c1b5",
+                "comment": "Send Police Imidiately.",
+                "proof_image_urls": [
+                    "https://example.com/images/crime24.jpg"
+                ],
+                "is_removed": false,
+                "_id": "67abac142583325b34ac3dfc",
+                "createdAt": "2025-02-11T19:59:16.804Z",
+                "updatedAt": "2025-02-11T19:59:16.804Z"
+            }
+        ],
+        "upVotes": [
+            "",
+            null
+        ],
+        "downVotes": [
+            ""
+        ],
+        "createdAt": "2025-02-11T19:18:05.451Z",
+        "updatedAt": "2025-02-11T20:48:29.362Z",
+        "__v": 5
     }
 }
 ```

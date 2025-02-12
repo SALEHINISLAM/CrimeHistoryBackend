@@ -299,18 +299,86 @@ const votePost = async (report_id: string, user_id: string, vote_type: "upVote" 
     }
 };
 
-const getCrimeReports = async (page: number = 1, limit: number = 10) => {
+// const getCrimeReports = async (page: number = 1, limit: number = 10) => {
+//     try {
+//         const skip = (page - 1) * limit;
+
+//         const crimeReports = await CrimeModel.find({})
+//             .sort({ createdAt: -1 }) // Sort by latest first (optional)
+//             .skip(skip) // Skip documents for pagination
+//             .limit(limit) // Limit the number of documents returned
+//             .exec();
+
+//         // Get the total count of crime reports (for frontend pagination UI)
+//         const totalReports = await CrimeModel.countDocuments();
+
+//         return {
+//             crimeReports,
+//             totalReports,
+//             currentPage: page,
+//             totalPages: Math.ceil(totalReports / limit),
+//         };
+//     } catch (error: any) {
+//         console.error("Error fetching crime reports:", error);
+
+//         // Handle errors
+//         if (error instanceof mongoose.Error.ValidationError) {
+//             const errorMessages = Object.values(error.errors).map((err) => err.message);
+//             throw new AppError(httpStatus.BAD_REQUEST, `Validation failed: ${errorMessages.join(", ")}`);
+//         }
+//         throw new AppError(httpStatus.INTERNAL_SERVER_ERROR, "Something went wrong");
+//     }
+// };
+
+const getCrimeReportById = async (report_id: string) => {
+    try {
+        // Find the crime report by ID
+        const crimeReport = await CrimeModel.findOne({report_id:report_id,is_banned:false}).exec();
+        console.log("first")
+        // If no crime report is found, throw an error
+        if (!crimeReport) {
+            throw new AppError(httpStatus.NOT_FOUND, "Crime report not found");
+        }
+
+        return crimeReport;
+    } catch (error: any) {
+        console.error("Error fetching crime report by ID:", error);
+
+        // Handle errors
+        if (error instanceof mongoose.Error.CastError) {
+            throw new AppError(httpStatus.BAD_REQUEST, "Invalid crime report ID");
+        }
+        throw new AppError(httpStatus.INTERNAL_SERVER_ERROR, "Something went wrong");
+    }
+};
+
+const getCrimeReports = async (page: number = 1, limit: number = 10, searchQuery?: string) => {
     try {
         const skip = (page - 1) * limit;
 
-        const crimeReports = await CrimeModel.find({})
+        // Define the base query
+        let query = {};
+
+        // If a search query is provided, add a regex filter for title and description
+        if (searchQuery) {
+            const regex = new RegExp(searchQuery, "i"); // Case-insensitive regex
+            query = {
+                $or: [
+                    { title: { $regex: regex } }, // Search in title
+                    { description: { $regex: regex } }, // Search in description
+                ],
+            };
+        }
+
+        // Fetch crime reports with pagination and search filter
+        const crimeReports = await CrimeModel.find(query)
             .sort({ createdAt: -1 }) // Sort by latest first (optional)
             .skip(skip) // Skip documents for pagination
             .limit(limit) // Limit the number of documents returned
             .exec();
 
         // Get the total count of crime reports (for frontend pagination UI)
-        const totalReports = await CrimeModel.countDocuments();
+        const totalReports = await CrimeModel.countDocuments(query);
 
         return {
             crimeReports,
@@ -325,28 +393,6 @@ const getCrimeReports = async (page: number = 1, limit: number = 10) => {
         if (error instanceof mongoose.Error.ValidationError) {
             const errorMessages = Object.values(error.errors).map((err) => err.message);
             throw new AppError(httpStatus.BAD_REQUEST, `Validation failed: ${errorMessages.join(", ")}`);
-        }
-        throw new AppError(httpStatus.INTERNAL_SERVER_ERROR, "Something went wrong");
-    }
-};
-
-const getCrimeReportById = async (id: string) => {
-    try {
-        // Find the crime report by ID
-        const crimeReport = await CrimeModel.findOne({report_id:id,is_banned:false}).exec();
-        console.log("first")
-        // If no crime report is found, throw an error
-        if (!crimeReport) {
-            throw new AppError(httpStatus.NOT_FOUND, "Crime report not found");
-        }
-
-        return crimeReport;
-    } catch (error: any) {
-        console.error("Error fetching crime report by ID:", error);
-
-        // Handle errors
-        if (error instanceof mongoose.Error.CastError) {
-            throw new AppError(httpStatus.BAD_REQUEST, "Invalid crime report ID");
         }
         throw new AppError(httpStatus.INTERNAL_SERVER_ERROR, "Something went wrong");
     }
