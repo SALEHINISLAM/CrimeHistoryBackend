@@ -43,7 +43,8 @@ const getAllUsers = async (
         // If a search query is provided, add a regex filter for the name field
         if (searchQuery) {
             const regex = new RegExp(searchQuery, "i"); // Case-insensitive regex
-            query.email = { $regex: regex }; // Search in the name field
+            query.email = { $regex: regex }; 
+            query.name = { $regex: regex }; 
         }
 
         // Fetch users with pagination and search filter

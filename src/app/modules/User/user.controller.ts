@@ -89,4 +89,19 @@ const resetPassword=catchAsync(async(req,res)=>{
     })
 })
 
-export const UserControllers = { createUser, loginUser, sendVerificationToken,verifyCode,sendForgetPasswordToken,resetPassword }
+const getMe=catchAsync(async(req,res)=>{
+    const user=req.user
+    console.log(user)
+    if (!user) {
+        throw new AppError(httpStatus.UNAUTHORIZED, "Please Login to get verification token") 
+    }
+    const result= await userServices.getMe(user.email)
+    sendResponse(res, {
+        statusCode: httpStatus.OK,
+        success: true,
+        message: "User retrived successfully",
+        data: result
+    })
+})
+
+export const UserControllers = { createUser, loginUser, sendVerificationToken,verifyCode,sendForgetPasswordToken,resetPassword,getMe }

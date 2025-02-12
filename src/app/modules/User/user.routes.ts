@@ -4,6 +4,7 @@ import { UserValidation } from './user.validation';
 import { UserControllers } from './user.controller';
 import auth from '../../middleware/auth';
 import { USER_ROLE } from './user.constants';
+import { userServices } from './user.service';
 
 const router=express.Router()
 
@@ -13,6 +14,6 @@ router.post("/verify-user",auth(USER_ROLE.Admin,USER_ROLE.UnVerifiedUser,USER_RO
 router.post("/verify-code",auth(USER_ROLE.Admin,USER_ROLE.VerifiedUser,USER_ROLE.UnVerifiedUser),validateRequest(UserValidation.verifyCodeValidationSchema),UserControllers.verifyCode)
 router.post("/forget-password",auth(USER_ROLE.Admin,USER_ROLE.VerifiedUser,USER_ROLE.UnVerifiedUser),UserControllers.sendForgetPasswordToken)
 router.post("/reset-password",auth(USER_ROLE.Admin,USER_ROLE.VerifiedUser,USER_ROLE.UnVerifiedUser),validateRequest(UserValidation.resetPasswordValidationSchema),UserControllers.resetPassword)
-
+router.get("/get-me",auth(USER_ROLE.Admin,USER_ROLE.VerifiedUser,USER_ROLE.UnVerifiedUser),UserControllers.getMe)
 
 export const UserRoutes=router

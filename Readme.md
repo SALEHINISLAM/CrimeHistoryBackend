@@ -763,3 +763,33 @@ post request
     }
 }
 ```
+
+21. Get Me
+```bash
+/api/v1/users/get-me
+```
+***Simple Output***
+```json
+{
+    "success": true,
+    "message": "User retrived successfully",
+    "statusCode": 200,
+    "data": {
+        "_id": "67aa11109d2570ae5526e6f5",
+        "user_id": "9a936322-4765-4203-88e3-4843cdd6c1b5",
+        "email": "msionlinekingdom@gmail.com",
+        "needs_password_change": false,
+        "phone_number": "01234567890",
+        "role": "VerifiedUser",
+        "is_banned": false,
+        "createdAt": "2025-02-10T14:45:36.409Z",
+        "updatedAt": "2025-02-12T07:43:35.142Z",
+        "__v": 0,
+        "verification_token": 0,
+        "passwordChangedAt": "2025-02-12T06:01:56.053Z",
+        "profile_pic": "https://i.ibb.co.com/xH0JL92/proPhoto.jpg",
+        "contribution_score": 7,
+        "name": "Salehin Islam"
+    }
+}
+```
