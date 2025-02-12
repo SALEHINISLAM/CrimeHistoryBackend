@@ -3,6 +3,7 @@ import { USER_ROLE } from "./user.constants";
 
 export interface TUser {
     user_id: string;
+    name:string;
     email: string;
     role: "SuperAdmin" | "Admin" | "VerifiedUser" | "UnVerifiedUser";
     password: string;

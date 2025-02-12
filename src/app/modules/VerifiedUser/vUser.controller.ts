@@ -16,10 +16,12 @@ const editProfile =catchAsync(async(req,res)=>{
     const payload=req.body
     const profilePic=payload?.profile_pic
     const bio=payload?.bio
-    if (!profilePic && !bio) {
+    const name=payload?.name
+    console.log(payload)
+    if (!profilePic && !bio && !name) {
         throw new AppError(httpStatus.NOT_ACCEPTABLE,"Please give some update information")
     }
-    const result = await VerifiedUserService.editProfile(user.email, profilePic, bio)
+    const result = await VerifiedUserService.editProfile(user.email, profilePic, bio,name)
     sendResponse(res, {
         statusCode: httpStatus.OK,
         success: true,

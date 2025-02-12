@@ -44,7 +44,7 @@ const createCrimeReport = async (email: string, payload: Partial<TCrime>) => {
         // Create the crime post
         const result = await CrimeModel.create([crimePost], { session });
         console.log("Crime Post Created:", result);
-        const updateContribution=await User.updateOne({user_id:user_id},{contribution_score:user.contribution_score+5})
+        const updateContribution = await User.updateOne({ user_id: user_id }, { contribution_score: user.contribution_score + 5 })
         await session.commitTransaction();
         await session.endSession();
 
@@ -125,7 +125,7 @@ const createComment = async (email: string, report_id: string, commentData: { co
             comment: commentData.comment, // Comment text
             proof_image_urls: commentData.proof_image_urls,
         };
-        const updateUser=await User.updateOne({user_id:user.user_id},{contribution_score:user.contribution_score+2});
+        const updateUser = await User.updateOne({ user_id: user.user_id }, { contribution_score: user.contribution_score + 2 });
         // Add the comment to the crime report
         crimeReport.comments.push(newComment as any);
         await crimeReport.save({ session });
@@ -210,11 +210,11 @@ const votePost = async (report_id: string, email: string, vote_type: "upVote" | 
     session.startTransaction();
 
     try {
-        const user=await User.findOne({email:email,is_banned:false})
+        const user = await User.findOne({ email: email, is_banned: false })
         if (!user) {
-            throw new AppError(httpStatus.NOT_FOUND,"User not found")
+            throw new AppError(httpStatus.NOT_FOUND, "User not found")
         }
-        const {user_id}=user
+        const { user_id } = user
         // Find the crime report
         const crimeReport = await CrimeModel.findOne({ report_id: report_id, is_banned: false }).session(session);
         if (!crimeReport) {
@@ -235,7 +235,7 @@ const votePost = async (report_id: string, email: string, vote_type: "upVote" | 
                 // If the user previously downvoted, remove their downvote
                 if (hasDownVoted) {
                     crimeReport.downVotes = crimeReport.downVotes.filter((id) => id !== user_id);
-                    crimeReport.verification_score += 1; 
+                    crimeReport.verification_score += 1;
                 }
 
                 // Add the user's ID to the upvotes array
@@ -335,38 +335,66 @@ const getCrimeReports = async (page: number = 1, limit: number = 10, searchQuery
         const skip = (page - 1) * limit;
 
         // Define the base query
-        let query:any = {};
+        let query: any = {};
 
         // If a search query is provided, add a regex filter for title and description
         if (searchQuery) {
             const regex = new RegExp(searchQuery, "i");
             query = {
                 $or: [
-                    { title: { $regex: regex } }, 
-                    { description: { $regex: regex } }, 
+                    { title: { $regex: regex } },
+                    { description: { $regex: regex } },
                 ],
             };
         }
 
         if (district) {
-            query.district = district; 
+            query.district = district;
         }
         if (division) {
             query.division = division; // Exact match for division
         }
 
         // Fetch crime reports with pagination and search filter
-        const crimeReports = await CrimeModel.find({...query,is_banned:false})
+        const crimeReports = await CrimeModel.find({ ...query, is_banned: false })
             .sort({ createdAt: -1 }) // Sort by latest first (optional)
             .skip(skip) // Skip documents for pagination
             .limit(limit) // Limit the number of documents returned
             .exec();
 
+            const formattedCrimeReports = await Promise.all(
+                crimeReports.map(async (report) => {
+                    // Fetch user details from UserModel based on user_id
+                    const user = report.is_anonymous
+                        ? { name: "Anonymous User" }
+                        : await User.findOne({ user_id: report.user_id }).select("name").lean();
+    
+                    return {
+                        report_id: report.report_id,
+                        title: report.title,
+                        description: report.description,
+                        division: report.division,
+                        district: report.district,
+                        crime_time: report.crime_time,
+                        image_urls: report.image_urls,
+                        verification_score: report.verification_score,
+                        is_banned: report.is_banned,
+                        comments: report.comments,
+                        upVotes: report.upVotes,
+                        downVotes: report.downVotes,
+                        is_verified: report.is_verified,
+                        createdAt: report.createdAt,
+                        updatedAt: report.updatedAt,
+                        name: report.is_anonymous?"Anonymous User": user?.name || "Verified User", // If user not found, set "Verified User"
+                    };
+                })
+            );
+
         // Get the total count of crime reports (for frontend pagination UI)
-        const totalReports = await CrimeModel.countDocuments({...query,is_banned:false});
+        const totalReports = await CrimeModel.countDocuments({ ...query, is_banned: false });
 
         return {
-            crimeReports,
+            formattedCrimeReports,
             totalReports,
             currentPage: page,
             totalPages: Math.ceil(totalReports / limit),

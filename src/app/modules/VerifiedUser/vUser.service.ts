@@ -2,55 +2,52 @@ import AppError from "../../errors/AppErrors";
 import { User } from "../User/user.model";
 import httpStatus from "http-status"
 
-const editProfile = async (email: string, profilePic?: string, bio?: string) => {
-    const user = await User.findOne({ email: email })
-    if (user?.profile_pic) {
-        if (profilePic && bio) {
-            const result = await User.updateOne({ email: email }, { profile_pic: profilePic, bio: bio })
-            if (result.modifiedCount > 0) {
-                return result
-            } else {
-                throw new AppError(httpStatus.NOT_MODIFIED, "Failed to update profile")
-            }
+const editProfile = async (email: string, profilePic?: string, bio?: string, name?: string) => {
+    try {
+        // Find user by email
+        const user = await User.findOne({ email: email });
+
+        if (!user) {
+            throw new AppError(httpStatus.NOT_FOUND, "User not found");
         }
-        else if (profilePic) {
-            const result = await User.updateOne({ email: email }, { profile_pic: profilePic })
-            if (result.modifiedCount > 0) {
-                return result
-            } else {
-                throw new AppError(httpStatus.NOT_MODIFIED, "Failed to update profile")
-            }
+
+        // Check if name is required (i.e., user has never set a name before)
+        const requiresName = !user.name;
+
+        if (requiresName && !name) {
+            throw new AppError(httpStatus.BAD_REQUEST, "Please provide a name before updating your profile");
         }
-        else {
-            const result = await User.updateOne({ email: email }, { bio: bio })
-            if (result.modifiedCount > 0) {
-                return result
-            } else {
-                throw new AppError(httpStatus.NOT_MODIFIED, "Failed to update profile")
-            }
+
+        // Prepare the update fields dynamically
+        const updateFields: Record<string, any> = {};
+
+        if (profilePic) updateFields.profile_pic = profilePic;
+        if (bio) updateFields.bio = bio;
+        if (name) updateFields.name = name; // Update name if provided
+
+        if (Object.keys(updateFields).length === 0) {
+            throw new AppError(httpStatus.BAD_REQUEST, "No changes provided for update");
         }
+
+        // Update user data
+        const result = await User.updateOne({ email: email }, { $set: updateFields });
+
+        if (result.modifiedCount > 0) {
+            return {
+                success: true,
+                message: "Profile updated successfully",
+                statusCode: httpStatus.OK,
+            };
+        } else {
+            throw new AppError(httpStatus.NOT_MODIFIED, "Failed to update profile");
+        }
+    } catch (error:any) {
+        console.error("Error updating profile:", error);
+        throw new AppError(
+            error?.statusCode || httpStatus.INTERNAL_SERVER_ERROR,
+            error?.message || "Something went wrong while updating the profile"
+        );
     }
-    else {
-        if (profilePic && bio) {
-            const result = await User.updateOne({ email: email }, { profile_pic: profilePic, bio: bio })
-            if (result.modifiedCount > 0) {
-                return result
-            } else {
-                throw new AppError(httpStatus.NOT_MODIFIED, "Failed to update profile")
-            }
-        }
-        else if (profilePic) {
-            const result = await User.updateOne({ email: email }, { profile_pic: profilePic })
-            if (result.modifiedCount > 0) {
-                return result
-            } else {
-                throw new AppError(httpStatus.NOT_MODIFIED, "Failed to update profile")
-            }
-        }
-        else{
-            throw new AppError(httpStatus.NOT_MODIFIED, "Please Upload Your Profile Picture First. It is required.")
-        }
-    }
-}
+};
 
 export const VerifiedUserService = { editProfile }
