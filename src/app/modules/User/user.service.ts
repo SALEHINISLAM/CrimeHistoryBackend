@@ -24,6 +24,7 @@ const createUserIntoDB = async (payload: TUser) => {
         userInfo.user_id = uuidv4()
         userInfo.role = USER_ROLE.UnVerifiedUser
         userInfo.verification_token = 0
+        userInfo.contribution_score = 0
         const result = await User.create([{ ...userInfo }], { session })
         await session.commitTransaction()
         await session.endSession()

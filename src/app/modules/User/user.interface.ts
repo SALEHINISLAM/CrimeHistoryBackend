@@ -15,6 +15,7 @@ export interface TUser {
     bio: string;
     updatedAt:Date;
     createdAt: Date;
+    contribution_score:number
 }
 
 export interface UserModel extends Model<TUser> {

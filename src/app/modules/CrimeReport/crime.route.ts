@@ -12,5 +12,5 @@ router.patch("/update-crime-post",auth(USER_ROLE.VerifiedUser,USER_ROLE.Admin),v
 router.post("/create-comment",auth(USER_ROLE.VerifiedUser,USER_ROLE.Admin),validateRequest(crimeValidations.createCommentValidationSchema),CrimeController.createComment)
 router.patch("/update-comment",auth(USER_ROLE.VerifiedUser,USER_ROLE.Admin),validateRequest(crimeValidations.updateCommentValidationSchema),CrimeController.updateComment)
 router.post("/vote-post",auth(USER_ROLE.VerifiedUser,USER_ROLE.Admin),validateRequest(crimeValidations.voteValidationSchema),CrimeController.votePost)
-
+router.get("/get-post",CrimeController.getCrimePost)
 export const CrimeRoutes=router

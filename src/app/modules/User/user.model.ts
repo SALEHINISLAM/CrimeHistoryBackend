@@ -46,6 +46,10 @@ const userSchema = new Schema<TUser, UserModel>(
         profile_pic: {
             type: String,
         },
+        contribution_score:{
+            type:Number,
+            default:0
+        }
     },
     {
         timestamps: true

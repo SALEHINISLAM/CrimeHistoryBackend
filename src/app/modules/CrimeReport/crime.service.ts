@@ -289,17 +289,45 @@ const votePost = async (report_id: string, user_id: string, vote_type: "upVote" 
         await session.abortTransaction();
         await session.endSession();
 
-        // Log the error for debugging
         console.error("Error voting:", error);
 
-        // Handle specific errors
         if (error instanceof AppError) {
             throw error;
         }
-
-        // Handle other errors
+        
         throw new AppError(httpStatus.INTERNAL_SERVER_ERROR, "Failed to process vote.");
     }
 };
 
-export const CrimeServices = { createCrimeReport, updateCrimePost, createComment, updateComment,votePost }
+const getCrimeReports = async (page: number = 1, limit: number = 10) => {
+    try {
+        const skip = (page - 1) * limit;
+
+        const crimeReports = await CrimeModel.find({})
+            .sort({ createdAt: -1 }) // Sort by latest first (optional)
+            .skip(skip) // Skip documents for pagination
+            .limit(limit) // Limit the number of documents returned
+            .exec();
+
+        // Get the total count of crime reports (for frontend pagination UI)
+        const totalReports = await CrimeModel.countDocuments();
+
+        return {
+            crimeReports,
+            totalReports,
+            currentPage: page,
+            totalPages: Math.ceil(totalReports / limit),
+        };
+    } catch (error: any) {
+        console.error("Error fetching crime reports:", error);
+
+        // Handle errors
+        if (error instanceof mongoose.Error.ValidationError) {
+            const errorMessages = Object.values(error.errors).map((err) => err.message);
+            throw new AppError(httpStatus.BAD_REQUEST, `Validation failed: ${errorMessages.join(", ")}`);
+        }
+        throw new AppError(httpStatus.INTERNAL_SERVER_ERROR, "Something went wrong");
+    }
+};
+
+export const CrimeServices = { createCrimeReport, updateCrimePost, createComment, updateComment,votePost ,getCrimeReports}
