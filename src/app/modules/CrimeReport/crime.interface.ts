@@ -24,5 +24,6 @@ export interface TCrime{
         is_removed:boolean
     }[],
     upVotes:string[],
-    downVotes:string[]
+    downVotes:string[],
+    is_verified:boolean
 }

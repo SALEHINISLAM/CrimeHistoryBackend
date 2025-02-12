@@ -57,18 +57,5 @@ const removeAdminFromVerifiedUser = catchAsync(async(req,res)=>{
         data: result,
     });
 })
-const banUser = catchAsync(async(req,res)=>{
-    const {email}=req.body
-    if (!email) {
-        throw new AppError(httpStatus.NOT_FOUND,"User not found")
-    }
-    const result= await AuthServices.banUser(email)
-    sendResponse(res, {
-        statusCode: httpStatus.OK,
-        success: true,
-        message: 'The user is banned successfully',
-        data: result,
-    });
-})
 
-export const AuthController = { changePassword,refreshToken, createAdminFromVerifiedUser,removeAdminFromVerifiedUser,banUser }
+export const AuthController = { changePassword,refreshToken, createAdminFromVerifiedUser,removeAdminFromVerifiedUser }

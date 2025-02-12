@@ -130,18 +130,6 @@ const removeAdmin=async (email:string)=>{
     return result
 }
 
-const banUser=async(email:string)=>{
-    const user =await User.findOne({email:email});
-    if (user?.role===USER_ROLE.Admin || user?.role===USER_ROLE.SuperAdmin) {
-        throw new Error("The selected user is an admin")
-    }
-    const result = await User.updateOne({email:email},{role:USER_ROLE.UnVerifiedUser,is_banned:true},{upsert:false})
-    if (result.modifiedCount===0) {
-        throw new Error("Something went wrong")
-    }
-    return {message: "The user is banned"}
-}
-
 export const AuthServices = {
-    loginUser,refreshToken,changePassword,createAdminFromVerifiedUser,removeAdmin,banUser
+    loginUser,refreshToken,changePassword,createAdminFromVerifiedUser,removeAdmin
 }

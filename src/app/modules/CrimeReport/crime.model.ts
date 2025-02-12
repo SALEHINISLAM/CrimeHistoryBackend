@@ -30,7 +30,8 @@ const crimeSchema = new Schema<TCrime>({
     is_banned: { type: Boolean, default: false },
     comments:[commentSchema],
     upVotes: { type: [String], default:[] },
-    downVotes: { type: [String], default:[] }
+    downVotes: { type: [String], default:[] },
+    is_verified:{ type: Boolean, default:false}
 },
 {
     timestamps:true

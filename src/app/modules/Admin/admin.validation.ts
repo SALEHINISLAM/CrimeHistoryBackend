@@ -6,4 +6,10 @@ const bannedCrimeValidationSchema=z.object({
     })
 })
 
-export const AdminValidations={bannedCrimeValidationSchema}
+const banUserValidationSchema=z.object({
+    body:z.object({
+        email:z.string({required_error:"User email is required"})
+    })
+})
+
+export const AdminValidations={bannedCrimeValidationSchema,banUserValidationSchema}

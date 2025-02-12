@@ -297,7 +297,7 @@ Super Admin access token must be in headers. because only he can made admin.
 10. Ban User
 Patch request
 ```bash
-/api/v1/auth/ban-user
+/api/v1/admin/ban-user
 ```
 Super Admin or Admin access token must be in headers. because only he can made admin.
 ***Simple Input***
@@ -542,7 +542,7 @@ post request
 18. Get Crime Post and search
 post request
 ```bash
-/api/v1/crimes/get-post?page=1&limit=10&search=theft
+/api/v1/crimes/get-post?page=1&limit=10&search=theft&district=Downtown&division=Dhaka
 ```
 ***Simple Output***
 ```json
@@ -724,6 +724,42 @@ post request
         "createdAt": "2025-02-11T19:18:05.451Z",
         "updatedAt": "2025-02-11T20:48:29.362Z",
         "__v": 5
+    }
+}
+```
+
+20. Get all User by Admin
+```bash
+/api/v1/admin/get-all-user?search=online
+```
+***Simple Output***
+```json
+{
+    "success": true,
+    "message": "Users are retrived successfully",
+    "statusCode": 200,
+    "data": {
+        "users": [
+            {
+                "_id": "67aa11109d2570ae5526e6f5",
+                "user_id": "9a936322-4765-4203-88e3-4843cdd6c1b5",
+                "email": "msionlinekingdom@gmail.com",
+                "needs_password_change": false,
+                "phone_number": "01234567890",
+                "role": "VerifiedUser",
+                "is_banned": false,
+                "createdAt": "2025-02-10T14:45:36.409Z",
+                "updatedAt": "2025-02-12T06:01:56.055Z",
+                "__v": 0,
+                "verification_token": 0,
+                "passwordChangedAt": "2025-02-12T06:01:56.053Z",
+                "profile_pic": "https://i.ibb.co.com/xH0JL92/proPhoto.jpg",
+                "contribution_score": 2
+            }
+        ],
+        "totalUsers": 1,
+        "currentPage": 1,
+        "totalPages": 1
     }
 }
 ```

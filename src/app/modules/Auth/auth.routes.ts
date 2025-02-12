@@ -15,6 +15,5 @@ router.patch("/create-admin",auth(USER_ROLE.SuperAdmin),validateRequest(AuthVali
 
 router.patch("/remove-admin",auth(USER_ROLE.SuperAdmin),validateRequest(AuthValidationSchema.removeAdminValidationSchema),AuthController.removeAdminFromVerifiedUser)
 
-router.patch("/ban-user",auth(USER_ROLE.SuperAdmin,USER_ROLE.Admin),validateRequest(AuthValidationSchema.banUserValidationSchema),AuthController.banUser)
 
 export const AuthRoutes=router

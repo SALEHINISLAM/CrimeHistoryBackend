@@ -44,7 +44,7 @@ const createCrimeReport = async (email: string, payload: Partial<TCrime>) => {
         // Create the crime post
         const result = await CrimeModel.create([crimePost], { session });
         console.log("Crime Post Created:", result);
-
+        const updateContribution=await User.updateOne({user_id:user_id},{contribution_score:user.contribution_score+5})
         await session.commitTransaction();
         await session.endSession();
 
@@ -125,7 +125,7 @@ const createComment = async (email: string, report_id: string, commentData: { co
             comment: commentData.comment, // Comment text
             proof_image_urls: commentData.proof_image_urls,
         };
-
+        const updateUser=await User.updateOne({user_id:user.user_id},{contribution_score:user.contribution_score+2});
         // Add the comment to the crime report
         crimeReport.comments.push(newComment as any);
         await crimeReport.save({ session });
@@ -149,7 +149,6 @@ const updateComment = async (email: string, report_id: string, comment_id: strin
     session.startTransaction();
     console.log("update ", email)
     try {
-        // Check if the user exists and is authorized
         const user = await User.findOne({ email: email }).session(session);
         if (!user) {
             throw new AppError(httpStatus.NOT_FOUND, "Please login to update the comment.");
@@ -158,7 +157,6 @@ const updateComment = async (email: string, report_id: string, comment_id: strin
             throw new AppError(httpStatus.UNAUTHORIZED, "You are banned and cannot update comments.");
         }
 
-        // Check if the crime report exists
         const crimeReport = await CrimeModel.findOne({ report_id: report_id, is_banned: false }).session(session);
         if (!crimeReport) {
             throw new AppError(httpStatus.NOT_FOUND, "Crime report not found or is banned.");
@@ -207,11 +205,16 @@ const updateComment = async (email: string, report_id: string, comment_id: strin
     }
 };
 
-const votePost = async (report_id: string, user_id: string, vote_type: "upVote" | "downVote" | "noVote") => {
+const votePost = async (report_id: string, email: string, vote_type: "upVote" | "downVote" | "noVote") => {
     const session = await mongoose.startSession();
     session.startTransaction();
 
     try {
+        const user=await User.findOne({email:email,is_banned:false})
+        if (!user) {
+            throw new AppError(httpStatus.NOT_FOUND,"User not found")
+        }
+        const {user_id}=user
         // Find the crime report
         const crimeReport = await CrimeModel.findOne({ report_id: report_id, is_banned: false }).session(session);
         if (!crimeReport) {
@@ -232,7 +235,7 @@ const votePost = async (report_id: string, user_id: string, vote_type: "upVote" 
                 // If the user previously downvoted, remove their downvote
                 if (hasDownVoted) {
                     crimeReport.downVotes = crimeReport.downVotes.filter((id) => id !== user_id);
-                    crimeReport.verification_score += 1; // Reverse the downvote effect
+                    crimeReport.verification_score += 1; 
                 }
 
                 // Add the user's ID to the upvotes array
@@ -278,6 +281,12 @@ const votePost = async (report_id: string, user_id: string, vote_type: "upVote" 
                 throw new AppError(httpStatus.BAD_REQUEST, "Invalid vote type.");
         }
 
+        if (crimeReport.verification_score > 10) {
+            crimeReport.is_verified = true;
+        } else {
+            crimeReport.is_verified = false;
+        }
+
         // Save the updated crime report
         await crimeReport.save({ session });
 
@@ -299,41 +308,10 @@ const votePost = async (report_id: string, user_id: string, vote_type: "upVote" 
     }
 };
 
-// const getCrimeReports = async (page: number = 1, limit: number = 10) => {
-//     try {
-//         const skip = (page - 1) * limit;
-
-//         const crimeReports = await CrimeModel.find({})
-//             .sort({ createdAt: -1 }) // Sort by latest first (optional)
-//             .skip(skip) // Skip documents for pagination
-//             .limit(limit) // Limit the number of documents returned
-//             .exec();
-
-//         // Get the total count of crime reports (for frontend pagination UI)
-//         const totalReports = await CrimeModel.countDocuments();
-
-//         return {
-//             crimeReports,
-//             totalReports,
-//             currentPage: page,
-//             totalPages: Math.ceil(totalReports / limit),
-//         };
-//     } catch (error: any) {
-//         console.error("Error fetching crime reports:", error);
-
-//         // Handle errors
-//         if (error instanceof mongoose.Error.ValidationError) {
-//             const errorMessages = Object.values(error.errors).map((err) => err.message);
-//             throw new AppError(httpStatus.BAD_REQUEST, `Validation failed: ${errorMessages.join(", ")}`);
-//         }
-//         throw new AppError(httpStatus.INTERNAL_SERVER_ERROR, "Something went wrong");
-//     }
-// };
-
 const getCrimeReportById = async (report_id: string) => {
     try {
         // Find the crime report by ID
-        const crimeReport = await CrimeModel.findOne({report_id:report_id,is_banned:false}).exec();
+        const crimeReport = await CrimeModel.findOne({ report_id: report_id, is_banned: false }).exec();
         console.log("first")
         // If no crime report is found, throw an error
         if (!crimeReport) {
@@ -352,33 +330,40 @@ const getCrimeReportById = async (report_id: string) => {
     }
 };
 
-const getCrimeReports = async (page: number = 1, limit: number = 10, searchQuery?: string) => {
+const getCrimeReports = async (page: number = 1, limit: number = 10, searchQuery?: string, district?: string, division?: string) => {
     try {
         const skip = (page - 1) * limit;
 
         // Define the base query
-        let query = {};
+        let query:any = {};
 
         // If a search query is provided, add a regex filter for title and description
         if (searchQuery) {
-            const regex = new RegExp(searchQuery, "i"); // Case-insensitive regex
+            const regex = new RegExp(searchQuery, "i");
             query = {
                 $or: [
-                    { title: { $regex: regex } }, // Search in title
-                    { description: { $regex: regex } }, // Search in description
+                    { title: { $regex: regex } }, 
+                    { description: { $regex: regex } }, 
                 ],
             };
         }
 
+        if (district) {
+            query.district = district; 
+        }
+        if (division) {
+            query.division = division; // Exact match for division
+        }
+
         // Fetch crime reports with pagination and search filter
-        const crimeReports = await CrimeModel.find(query)
+        const crimeReports = await CrimeModel.find({...query,is_banned:false})
             .sort({ createdAt: -1 }) // Sort by latest first (optional)
             .skip(skip) // Skip documents for pagination
             .limit(limit) // Limit the number of documents returned
             .exec();
 
         // Get the total count of crime reports (for frontend pagination UI)
-        const totalReports = await CrimeModel.countDocuments(query);
+        const totalReports = await CrimeModel.countDocuments({...query,is_banned:false});
 
         return {
             crimeReports,

@@ -94,7 +94,7 @@ const votePost = catchAsync(async (req, res) => {
     }
 
     // Call the service function to process the vote
-    const result = await CrimeServices.votePost(report_id as string, user?.user_id, vote_type);
+    const result = await CrimeServices.votePost(report_id as string, user?.email, vote_type);
 
     // Send response
     sendResponse(res, {
@@ -110,8 +110,9 @@ const getCrimePost = catchAsync(async (req, res) => {
     const page = parseInt(req.query.page as string) || 1;
     const limit = parseInt(req.query.limit as string) || 10;
     const searchQuery = req.query.search as string | undefined;
-    // Fetch crime posts with pagination
-    const result = await CrimeServices.getCrimeReports(page, limit,searchQuery);
+    const district = req.query.district as string | undefined; 
+    const division = req.query.division as string | undefined;
+    const result = await CrimeServices.getCrimeReports(page, limit,searchQuery,district,division);
 
     // Send response
     sendResponse(res, {
