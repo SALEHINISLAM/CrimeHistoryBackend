@@ -30,10 +30,10 @@ const createCrimeReport = async (email: string, payload: Partial<TCrime>) => {
         const { user_id } = user;
         const crimePost = {
             ...payload,
-            user_id, 
+            user_id,
             verification_score: 0,
             is_banned: false,
-            report_id: uuidv4(), 
+            report_id: uuidv4(),
             comments: [],
             upVotes: [],
             downVotes: [],
@@ -49,7 +49,7 @@ const createCrimeReport = async (email: string, payload: Partial<TCrime>) => {
         await session.endSession();
 
         return result;
-    } catch (error:any) {
+    } catch (error: any) {
         await session.abortTransaction();
         await session.endSession();
 
@@ -116,8 +116,8 @@ const createComment = async (email: string, report_id: string, commentData: { co
         if (!crimeReport) {
             throw new AppError(httpStatus.NOT_FOUND, "Crime report not found or is banned.");
         }
-        const postScore=crimeReport.verification_score
-        crimeReport.verification_score=postScore+2
+        const postScore = crimeReport.verification_score
+        crimeReport.verification_score = postScore + 2
         // Create the comment object
         const newComment = {
             comment_id: uuidv4(), // Generate a unique ID for the comment
@@ -147,7 +147,7 @@ const createComment = async (email: string, report_id: string, commentData: { co
 const updateComment = async (email: string, report_id: string, comment_id: string, updateData: { comment?: string; proof_image_urls?: string[] }) => {
     const session = await mongoose.startSession();
     session.startTransaction();
-    console.log("update ",email)
+    console.log("update ", email)
     try {
         // Check if the user exists and is authorized
         const user = await User.findOne({ email: email }).session(session);
@@ -166,7 +166,7 @@ const updateComment = async (email: string, report_id: string, comment_id: strin
 
         // Find the comment to update
         const commentIndex = crimeReport.comments.findIndex(
-            (comment) => comment.comment_id === comment_id && comment.user_id === user.user_id && comment.is_removed!=true
+            (comment) => comment.comment_id === comment_id && comment.user_id === user.user_id && comment.is_removed != true
         );
         if (commentIndex === -1) {
             throw new AppError(httpStatus.NOT_FOUND, "Comment not found or you are not authorized to update it.");
@@ -294,7 +294,7 @@ const votePost = async (report_id: string, user_id: string, vote_type: "upVote" 
         if (error instanceof AppError) {
             throw error;
         }
-        
+
         throw new AppError(httpStatus.INTERNAL_SERVER_ERROR, "Failed to process vote.");
     }
 };
@@ -330,4 +330,26 @@ const getCrimeReports = async (page: number = 1, limit: number = 10) => {
     }
 };
 
-export const CrimeServices = { createCrimeReport, updateCrimePost, createComment, updateComment,votePost ,getCrimeReports}
+const getCrimeReportById = async (id: string) => {
+    try {
+        // Find the crime report by ID
+        const crimeReport = await CrimeModel.findOne({report_id:id,is_banned:false}).exec();
+        console.log("first")
+        // If no crime report is found, throw an error
+        if (!crimeReport) {
+            throw new AppError(httpStatus.NOT_FOUND, "Crime report not found");
+        }
+
+        return crimeReport;
+    } catch (error: any) {
+        console.error("Error fetching crime report by ID:", error);
+
+        // Handle errors
+        if (error instanceof mongoose.Error.CastError) {
+            throw new AppError(httpStatus.BAD_REQUEST, "Invalid crime report ID");
+        }
+        throw new AppError(httpStatus.INTERNAL_SERVER_ERROR, "Something went wrong");
+    }
+};
+
+export const CrimeServices = { createCrimeReport, updateCrimePost, createComment, updateComment, votePost, getCrimeReports, getCrimeReportById }

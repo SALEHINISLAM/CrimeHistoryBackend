@@ -122,4 +122,19 @@ const getCrimePost = catchAsync(async (req, res) => {
     });
 });
 
-export const CrimeController={createCrimePost,updateCrimePost,createComment,updateComment,votePost,getCrimePost}
+const getCrimeReportById = catchAsync(async (req, res) => {
+    const { report_id } = req.query; // Extract ID from request parameters
+    console.log(report_id)
+    // Fetch the crime report by ID
+    const crimeReport = await CrimeServices.getCrimeReportById(report_id as string);
+
+    // Send response
+    sendResponse(res, {
+        statusCode: httpStatus.OK,
+        success: true,
+        message: "Crime report fetched successfully",
+        data: crimeReport,
+    });
+});
+
+export const CrimeController={createCrimePost,updateCrimePost,createComment,updateComment,votePost,getCrimePost,getCrimeReportById}

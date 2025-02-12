@@ -13,4 +13,6 @@ router.post("/create-comment",auth(USER_ROLE.VerifiedUser,USER_ROLE.Admin),valid
 router.patch("/update-comment",auth(USER_ROLE.VerifiedUser,USER_ROLE.Admin),validateRequest(crimeValidations.updateCommentValidationSchema),CrimeController.updateComment)
 router.post("/vote-post",auth(USER_ROLE.VerifiedUser,USER_ROLE.Admin),validateRequest(crimeValidations.voteValidationSchema),CrimeController.votePost)
 router.get("/get-post",CrimeController.getCrimePost)
+router.get("/get-single-post",CrimeController.getCrimeReportById)
+
 export const CrimeRoutes=router
