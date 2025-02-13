@@ -2,7 +2,7 @@ import AppError from "../../errors/AppErrors";
 import { User } from "../User/user.model";
 import httpStatus from "http-status"
 
-const editProfile = async (email: string, profilePic?: string, bio?: string, name?: string) => {
+const editProfile = async (email: string, profile_pic?: string, bio?: string, name?: string) => {
     try {
         // Find user by email
         const user = await User.findOne({ email: email });
@@ -21,16 +21,23 @@ const editProfile = async (email: string, profilePic?: string, bio?: string, nam
         // Prepare the update fields dynamically
         const updateFields: Record<string, any> = {};
 
-        if (profilePic) updateFields.profile_pic = profilePic;
+        if (profile_pic) updateFields.profile_pic = profile_pic; // Use profile_pic consistently
         if (bio) updateFields.bio = bio;
-        if (name) updateFields.name = name; // Update name if provided
+        if (name) updateFields.name = name;
 
         if (Object.keys(updateFields).length === 0) {
             throw new AppError(httpStatus.BAD_REQUEST, "No changes provided for update");
         }
 
+        console.log("Update Fields:", updateFields);
+
         // Update user data
-        const result = await User.updateOne({ email: email }, { $set: updateFields });
+        const result = await User.updateOne(
+            { email: email }, // Filter by email
+            { $set: updateFields } // Use $set to update the fields
+        );
+
+        console.log("Update Result:", result);
 
         if (result.modifiedCount > 0) {
             return {
@@ -41,7 +48,7 @@ const editProfile = async (email: string, profilePic?: string, bio?: string, nam
         } else {
             throw new AppError(httpStatus.NOT_MODIFIED, "Failed to update profile");
         }
-    } catch (error:any) {
+    } catch (error: any) {
         console.error("Error updating profile:", error);
         throw new AppError(
             error?.statusCode || httpStatus.INTERNAL_SERVER_ERROR,

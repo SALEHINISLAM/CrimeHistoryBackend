@@ -34,6 +34,9 @@ const userSchema = new Schema<TUser, UserModel>(
         passwordChangedAt:{
             type: Date,
         },
+        bio:{
+            type:String
+        },
         phone_number: {
             type: String,
             required: true

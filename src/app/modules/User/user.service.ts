@@ -227,7 +227,7 @@ const getMe = async (email: string) => {
 }
 
 const topContributors = async () => {
-    const contributors = await User.find({ is_banned: false, role: USER_ROLE.VerifiedUser, name: { $ne: null } }).sort({ contribution_score: 1,createdAt:-1 }).select("name profile_pic").limit(10)
+    const contributors = await User.find({ is_banned: false, role: USER_ROLE.VerifiedUser, name: { $ne: null } }).sort({ contribution_score: -1,createdAt:1 }).select("name profile_pic").limit(10)
     return contributors
 }
 

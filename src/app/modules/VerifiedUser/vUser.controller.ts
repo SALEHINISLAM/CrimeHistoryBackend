@@ -14,14 +14,14 @@ const editProfile =catchAsync(async(req,res)=>{
         throw new AppError(httpStatus.UNAUTHORIZED,"Please Verify Your Account"); 
     }
     const payload=req.body
-    const profilePic=payload?.profile_pic
+    const profile_pic=payload?.profilePic
     const bio=payload?.bio
     const name=payload?.name
     console.log(payload)
-    if (!profilePic && !bio && !name) {
+    if (!profile_pic && !bio && !name) {
         throw new AppError(httpStatus.NOT_ACCEPTABLE,"Please give some update information")
     }
-    const result = await VerifiedUserService.editProfile(user.email, profilePic, bio,name)
+    const result = await VerifiedUserService.editProfile(user.email, profile_pic, bio,name)
     sendResponse(res, {
         statusCode: httpStatus.OK,
         success: true,
