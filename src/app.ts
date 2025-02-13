@@ -4,11 +4,12 @@ import router from './app/Routes';
 import globalErrorHandler from './app/middleware/globalErrorHandler';
 import notFound from './app/middleware/notFound';
 import cookieParser from 'cookie-parser';
+import config from './app/config';
 
 const app:Application = express();
 
 app.use(cookieParser())
-app.use(cors({origin:"http://localhost:5173",
+app.use(cors({origin:config.mode==="Development"?config.devFrontEnd :config.prodFrontEnd,
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE","PATCH"], 
 }))

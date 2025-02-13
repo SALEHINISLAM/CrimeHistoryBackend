@@ -16,4 +16,6 @@ export default {
     emailAddress: process.env.NMEmail,
     emailPassword:process.env.NMPass,
     emailHostName: process.env.NMServiceName,
+    devFrontEnd: process.env.FrontEndDEV,
+    prodFrontEnd: process.env.FrontEndPROD
 }
