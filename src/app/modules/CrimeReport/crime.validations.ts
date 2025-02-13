@@ -13,7 +13,8 @@ const createCrimeValidationSchema = z.object({
         image_urls: z.array(z.string().url()).optional(),  // image_urls is an optional array of strings
         video_url: z.string().url().optional(),  // video_url is an optional string
         verification_score: z.number().default(0),  // Default to 0 if not provided
-        is_banned: z.boolean().default(false),  
+        is_banned: z.boolean().default(false),
+        is_anonymous: z.boolean().default(false)
     })
 });
 
@@ -40,9 +41,9 @@ const createCommentValidationSchema = z.object({
 
 const updateCommentValidationSchema = z.object({
     body: z.object({
-        comment_id: z.string().uuid().optional(), 
-        user_id: z.string().min(1, { message: "User ID is required" }).optional(), 
-        comment: z.string().min(1, { message: "Comment text is required" }).optional(), 
+        comment_id: z.string().uuid().optional(),
+        user_id: z.string().min(1, { message: "User ID is required" }).optional(),
+        comment: z.string().min(1, { message: "Comment text is required" }).optional(),
         proof_image_urls: z.array(z.string().url({ message: "Invalid URL format" })).default([]).optional(),
     })
 })
@@ -56,5 +57,5 @@ const voteValidationSchema = z.object({
     }),
 });
 
-export const crimeValidations = { createCrimeValidationSchema, updateCrimeValidationSchema, createCommentValidationSchema,updateCommentValidationSchema ,voteValidationSchema}
+export const crimeValidations = { createCrimeValidationSchema, updateCrimeValidationSchema, createCommentValidationSchema, updateCommentValidationSchema, voteValidationSchema }
 

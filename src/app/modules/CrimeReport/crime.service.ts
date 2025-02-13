@@ -317,8 +317,41 @@ const getCrimeReportById = async (report_id: string) => {
         if (!crimeReport) {
             throw new AppError(httpStatus.NOT_FOUND, "Crime report not found");
         }
-
-        return crimeReport;
+        const postUser=await  User.findOne({user_id:crimeReport?.user_id})
+        const comments=await Promise.all(
+            crimeReport?.comments?.map(async(comment)=>{
+                const commentUser=await User.findOne({user_id:comment?.user_id})
+                return {
+                    comment:comment.comment,
+                    comment_id:comment.comment_id,
+                    user_id:comment.user_id,
+                    proof_image_urls:comment.proof_image_urls,
+                    createdAt: comment.createdAt,
+                    updatedAt: comment.updatedAt,
+                    is_removed: comment.is_removed,
+                    commentUserName:commentUser?.name ||"User"
+                }
+            })
+        )
+        return {
+            report_id: crimeReport.report_id,
+            user_id:crimeReport.user_id,
+            title: crimeReport.title,
+            description: crimeReport.description,
+            division: crimeReport.division,
+            district: crimeReport.district,
+            crime_time: crimeReport.crime_time,
+            image_urls: crimeReport.image_urls,
+            verification_score: crimeReport.verification_score,
+            is_banned: crimeReport.is_banned,
+            comments: comments,
+            upVotes: crimeReport.upVotes,
+            downVotes: crimeReport.downVotes,
+            is_verified: crimeReport.is_verified,
+            createdAt: crimeReport.createdAt,
+            updatedAt: crimeReport.updatedAt,
+            name: crimeReport.is_anonymous?"Anonymous User": postUser?.name || "Verified User", // If user not found, set "Verified User"
+        };
     } catch (error: any) {
         console.error("Error fetching crime report by ID:", error);
 
@@ -357,7 +390,7 @@ const getCrimeReports = async (page: number = 1, limit: number = 10, searchQuery
 
         // Fetch crime reports with pagination and search filter
         const crimeReports = await CrimeModel.find({ ...query, is_banned: false })
-            .sort({ createdAt: -1 }) // Sort by latest first (optional)
+            .sort({ createdAt: -1 ,verification_score:1}) // Sort by latest first (optional)
             .skip(skip) // Skip documents for pagination
             .limit(limit) // Limit the number of documents returned
             .exec();
@@ -368,9 +401,24 @@ const getCrimeReports = async (page: number = 1, limit: number = 10, searchQuery
                     const user = report.is_anonymous
                         ? { name: "Anonymous User" }
                         : await User.findOne({ user_id: report.user_id }).select("name").lean();
-    
+                    const comments=await Promise.all(
+                        report?.comments?.map(async(comment)=>{
+                            const commentUser=await User.findOne({user_id:comment?.user_id})
+                            return {
+                                comment:comment.comment,
+                                comment_id:comment.comment_id,
+                                user_id:comment.user_id,
+                                proof_image_urls:comment.proof_image_urls,
+                                createdAt: comment.createdAt,
+                                updatedAt: comment.updatedAt,
+                                is_removed: comment.is_removed,
+                                commentUserName:commentUser?.name ||"User"
+                            }
+                        })
+                    )
                     return {
                         report_id: report.report_id,
+                        user_id:report.user_id,
                         title: report.title,
                         description: report.description,
                         division: report.division,
@@ -379,7 +427,7 @@ const getCrimeReports = async (page: number = 1, limit: number = 10, searchQuery
                         image_urls: report.image_urls,
                         verification_score: report.verification_score,
                         is_banned: report.is_banned,
-                        comments: report.comments,
+                        comments: comments,
                         upVotes: report.upVotes,
                         downVotes: report.downVotes,
                         is_verified: report.is_verified,

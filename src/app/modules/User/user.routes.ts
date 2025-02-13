@@ -15,5 +15,6 @@ router.post("/verify-code",auth(USER_ROLE.Admin,USER_ROLE.VerifiedUser,USER_ROLE
 router.post("/forget-password",auth(USER_ROLE.Admin,USER_ROLE.VerifiedUser,USER_ROLE.UnVerifiedUser),UserControllers.sendForgetPasswordToken)
 router.post("/reset-password",auth(USER_ROLE.Admin,USER_ROLE.VerifiedUser,USER_ROLE.UnVerifiedUser),validateRequest(UserValidation.resetPasswordValidationSchema),UserControllers.resetPassword)
 router.get("/get-me",auth(USER_ROLE.Admin,USER_ROLE.VerifiedUser,USER_ROLE.UnVerifiedUser),UserControllers.getMe)
+router.get("/top-contributors",UserControllers.topContributors)
 
 export const UserRoutes=router

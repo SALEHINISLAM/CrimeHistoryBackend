@@ -226,4 +226,9 @@ const getMe = async (email: string) => {
     }
 }
 
-export const userServices = { createUserIntoDB, sendVerificationToken, verifyCode, sendForgetPasswordToken, resetPassword, getMe }
+const topContributors = async () => {
+    const contributors = await User.find({ is_banned: false, role: USER_ROLE.VerifiedUser, name: { $ne: null } }).sort({ contribution_score: 1,createdAt:-1 }).select("name profile_pic").limit(10)
+    return contributors
+}
+
+export const userServices = { createUserIntoDB, sendVerificationToken, verifyCode, sendForgetPasswordToken, resetPassword, getMe, topContributors }

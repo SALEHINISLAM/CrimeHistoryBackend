@@ -104,4 +104,16 @@ const getMe=catchAsync(async(req,res)=>{
     })
 })
 
-export const UserControllers = { createUser, loginUser, sendVerificationToken,verifyCode,sendForgetPasswordToken,resetPassword,getMe }
+const topContributors = catchAsync(async (req, res) => {
+    const contributors = await userServices.topContributors();
+
+    // Send response
+    sendResponse(res, {
+        statusCode: httpStatus.OK,
+        success: true,
+        message: "contributors fetched successfully",
+        data: contributors,
+    });
+});
+
+export const UserControllers = { createUser, loginUser, sendVerificationToken,verifyCode,sendForgetPasswordToken,resetPassword,getMe,topContributors }

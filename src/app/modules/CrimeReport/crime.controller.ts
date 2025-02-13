@@ -85,7 +85,7 @@ const votePost = catchAsync(async (req, res) => {
     const { report_id } = req.query; // Get report_id from URL params
     const { vote_type } = req.body; // Get vote_type from request body
     const user = req.user; // Get authenticated user from request
-
+    console.log("from vote post",req.body, report_id)
     if (!report_id) {
         throw new AppError(httpStatus.BAD_REQUEST, "Report ID is required.");
     }
@@ -137,5 +137,6 @@ const getCrimeReportById = catchAsync(async (req, res) => {
         data: crimeReport,
     });
 });
+
 
 export const CrimeController={createCrimePost,updateCrimePost,createComment,updateComment,votePost,getCrimePost,getCrimeReportById}

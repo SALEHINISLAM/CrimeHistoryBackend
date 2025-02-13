@@ -31,7 +31,8 @@ const crimeSchema = new Schema<TCrime>({
     comments:[commentSchema],
     upVotes: { type: [String], default:[] },
     downVotes: { type: [String], default:[] },
-    is_verified:{ type: Boolean, default:false}
+    is_verified:{ type: Boolean, default:false},
+    is_anonymous:{type: Boolean, default:false}
 },
 {
     timestamps:true

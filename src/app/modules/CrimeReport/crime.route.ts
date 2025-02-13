@@ -4,6 +4,7 @@ import { crimeValidations } from './crime.validations';
 import { CrimeController } from './crime.controller';
 import auth from '../../middleware/auth';
 import { USER_ROLE } from '../User/user.constants';
+import { CrimeServices } from './crime.service';
 
 const router=express.Router();
 
