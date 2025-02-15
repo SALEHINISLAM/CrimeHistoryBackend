@@ -8,7 +8,7 @@ export const createToken=(
     expiresIn:string ,
 )=>{
     console.log("from create token", jwtPayload);
-    return jwt.sign(jwtPayload, secret, {expiresIn});
+    return jwt.sign(jwtPayload, secret, {expiresIn} as SignOptions);
 }
 
 export const verifyToken=(token:string,secret:string):JwtPayload=>{

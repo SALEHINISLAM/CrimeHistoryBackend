@@ -793,3 +793,28 @@ post request
     }
 }
 ```
+
+21. Top Contributors
+```bash
+/api/v1/crimes/top-contributors
+```
+***Simple Output***
+```json
+{
+    "success": true,
+    "message": "contributors fetched successfully",
+    "statusCode": 200,
+    "data": [
+        {
+            "_id": "67aa11109d2570ae5526e6f5",
+            "profile_pic": "https://i.ibb.co.com/xH0JL92/proPhoto.jpg",
+            "name": "Md Salehin Islam"
+        },
+        {
+            "_id": "67ade1005ba71bfea2efa798",
+            "name": "Professional network",
+            "profile_pic": "https://res.cloudinary.com/dsxboutys/image/upload/v1739479621/ms4hzdd91ovmfkty7hlk.png"
+        }
+    ]
+}
+```

@@ -1,5 +1,5 @@
 import { ErrorRequestHandler } from "express";
-import { TErrorResponse, TErrorSources } from "../../Types/Error";
+import {  TErrorSources } from "../../Types/Error";
 import { ZodError } from "zod";
 import handleZodError from "../errors/HandleZodError";
 import handleValidationError from "../errors/HandleValidationErros";
@@ -61,7 +61,7 @@ const globalErrorHandler: ErrorRequestHandler = (err, req, res, next)=> {
         ];
     }
     //ultimate return
-    return res.status(statusCode).json({
+    res.status(statusCode).json({
         success: false,
         message,
         errorSources,
