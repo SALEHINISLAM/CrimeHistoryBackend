@@ -94,7 +94,7 @@ const sendForgetPasswordToken = async (payload: string) => {
     const session = await mongoose.startSession();
     session.startTransaction();
     const email = payload;
-
+    console.log("fp",payload)
     try {
         // Step 1: Generate the verification code
         const verificationCode = Math.floor(Math.random() * 9000) + 1000;
@@ -204,8 +204,8 @@ const verifyCode = async (email: string, code: number) => {
     }
 };
 
-const resetPassword = async (email: string, password: string) => {
-    const result = await User.updateOne({ email: email, needs_password_change: true, verification_token: 0 }, { password: password, needs_password_change: false }, { upsert: false })
+const resetPassword = async (email: string, password: string,code:number) => {
+    const result = await User.updateOne({ email: email, needs_password_change: true, verification_token: code }, { password: password, needs_password_change: false }, { upsert: false })
     console.log(result)
     if (result.modifiedCount === 0) {
         throw new AppError(httpStatus.UNAUTHORIZED, "Unauthorized")

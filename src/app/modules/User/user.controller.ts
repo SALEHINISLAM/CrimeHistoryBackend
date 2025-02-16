@@ -44,10 +44,12 @@ const sendVerificationToken = catchAsync(async (req, res) => {
         throw new AppError(httpStatus.UNAUTHORIZED, "Please Login to get verification token")
     }
 })
+
 const sendForgetPasswordToken = catchAsync(async (req, res) => {
-    const user = req?.user;
-    if (user) {
-        const result = await userServices.sendForgetPasswordToken(user?.email)
+    const {email} = req?.body;
+    console.log(req.body)
+    if (email) {
+        const result = await userServices.sendForgetPasswordToken(email)
         sendResponse(res, {
             statusCode: httpStatus.OK,
             success: true,
@@ -75,12 +77,14 @@ const verifyCode=catchAsync(async(req,res)=>{
 })
 
 const resetPassword=catchAsync(async(req,res)=>{
-    const user=req.user
-    if (!user) {
+    const {email}=req.body
+    console.log(req.body)
+    if (!email) {
         throw new AppError(httpStatus.UNAUTHORIZED, "Please Login to get verification token") 
     }
+    const {code} =req.body 
     const pass=await bcrypt.hash(req.body?.password,Number(config.bcrypt_salt_rounds))
-    const result= await userServices.resetPassword(user.email,pass)
+    const result= await userServices.resetPassword(email,pass,code)
     sendResponse(res, {
         statusCode: httpStatus.OK,
         success: true,

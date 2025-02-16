@@ -12,8 +12,8 @@ router.post('/register',validateRequest(UserValidation.createUserValidationSchem
 router.post("/login",UserControllers.loginUser)
 router.post("/verify-user",auth(USER_ROLE.Admin,USER_ROLE.UnVerifiedUser,USER_ROLE.VerifiedUser),UserControllers.sendVerificationToken)
 router.post("/verify-code",auth(USER_ROLE.Admin,USER_ROLE.VerifiedUser,USER_ROLE.UnVerifiedUser),validateRequest(UserValidation.verifyCodeValidationSchema),UserControllers.verifyCode)
-router.post("/forget-password",auth(USER_ROLE.Admin,USER_ROLE.VerifiedUser,USER_ROLE.UnVerifiedUser),UserControllers.sendForgetPasswordToken)
-router.post("/reset-password",auth(USER_ROLE.Admin,USER_ROLE.VerifiedUser,USER_ROLE.UnVerifiedUser),validateRequest(UserValidation.resetPasswordValidationSchema),UserControllers.resetPassword)
+router.post("/forget-password",UserControllers.sendForgetPasswordToken)
+router.post("/reset-password",validateRequest(UserValidation.resetPasswordValidationSchema),UserControllers.resetPassword)
 router.get("/get-me",auth(USER_ROLE.Admin,USER_ROLE.VerifiedUser,USER_ROLE.UnVerifiedUser),UserControllers.getMe)
 router.get("/top-contributors",UserControllers.topContributors)
 

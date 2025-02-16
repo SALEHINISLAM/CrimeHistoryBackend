@@ -48,7 +48,8 @@ const verifyCodeValidationSchema = z.object({
 const resetPasswordValidationSchema = z.object({
     body: z.object({
         password: z.string({ required_error: "Password is required." }),
-        code: z.number({ required_error: "Verification code is required." })
+        code: z.number({ required_error: "Verification code is required." }),
+        email: z.string({ required_error: "Email is required." })
     })
 })
 
